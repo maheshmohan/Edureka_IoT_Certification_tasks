@@ -2,6 +2,7 @@ from sense_hat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
 from signal import pause
 from time import sleep
 import pygal
+import random
 
 exit_timer = False
 exit_game = False
@@ -56,6 +57,39 @@ def clear_display():
         ]
     return blank
 
+def draw_path1():
+    Y = yellow
+    O = nothing
+    path = [
+        Y, Y, Y, Y, O, O, O, O,
+        O, O, O, Y, O, O, O, O,
+        O, O, O, Y, Y, Y, Y, Y,
+        O, O, O, O, O, O, O, Y,
+        O, O, O, Y, Y, Y, O, Y,
+        O, O, O, Y, O, Y, O, Y,
+        O, Y, Y, Y, O, Y, O, Y,
+        O, Y, O, O, O, Y, Y, Y,
+        ]
+    return path
+
+def draw_path2():
+    Y = yellow
+    O = nothing
+    path = [
+        Y, Y, Y, O, O, O, O, O,
+        O, O, Y, O, O, O, O, O,
+        O, O, Y, Y, Y, O, O, O,
+        O, O, O, O, Y, O, O, O,
+        O, O, O, O, Y, Y, Y, O,
+        O, O, O, O, O, O, Y, O,
+        O, O, O, O, O, O, Y, O,
+        O, O, O, O, O, O, Y, Y,
+        ]
+    return path
+
+win_pixels = [(1,7),(7,7)]
+
+paths = [draw_path1, draw_path2]
 
 def update_menu():
     global menu_item
@@ -166,7 +200,73 @@ def start_weather_logger():
     update_menu()
 
 def start_tightrope():
-    print("in tightropw")
+    print("in tightrope")
+    global in_menu, in_game, exit_game
+    print("in weather_logger")
+    exit_game = False
+    in_menu = False
+    in_game = True
+    
+    tries = 0
+    win = False
+    path = random.randint(0,1)
+    print(path)
+
+    sense.set_pixels(paths[path]())
+    win_pixel=win_pixels[path]
+
+    while not tries >= 3 and not win:
+        char_x=0
+        char_y=0
+        sense.set_pixel(char_x,char_y,blue)
+        while True:
+            acceleration = sense.get_accelerometer_raw()
+            x = acceleration['x']
+            y = acceleration['y']
+            z = acceleration['z']
+            
+            x=round(x, 0)
+            y=round(y, 0)
+            z=round(z, 0)
+
+            print("x={0}, y={1}, z={2}".format(x, y, z))
+            
+            char_x = char_x + int(x)
+            char_y = char_y + int(y)
+            print(str(char_x),"+",str(char_y))
+            
+            if char_x > 7:
+                char_x = 7
+            if char_x < 1:
+                char_x = 0
+            if char_y > 7:
+                char_x = 7
+            if char_y < 1:
+                char_y = 0
+            
+            print(sense.get_pixel(int(char_x),int(char_y)))
+            
+            if sense.get_pixel(int(char_x),int(char_y)) == [0,0,0]:
+                sense.set_pixels(clear_display())
+                sense.set_pixels(paths[path]())
+                sense.set_pixel(char_x,char_y,blue)
+                tries = tries+1
+                break
+            elif (char_x,char_y)==win_pixel:
+                win = True
+                break
+            else:
+                sense.set_pixel(char_x,char_y,blue)
+                sleep(2)
+    if win:
+        sense.show_message("You Won!", text_colour=green)
+    else:
+        sense.show_message("You Lose!", text_colour=red)
+    
+    exit_game = True
+    in_game=False
+    in_menu=True
+    update_menu()
 
 def start_compass_maze():
     print("in compass_maze")
