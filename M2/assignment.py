@@ -270,6 +270,29 @@ def start_tightrope():
 
 def start_compass_maze():
     print("in compass_maze")
+    exit_game = False
+    in_menu = False
+    in_game = True
+    
+    for count in range(0,5):
+        event = sense.stick.wait_for_event()
+        if event.direction == "middle" and event.action == ACTION_RELEASED:
+            north = sense.get_compass()
+            north = int(round(north,0))
+            print(north)
+            if north < 100 and north > 80:
+                sense.show_letter('W')
+            elif north < 10 and north > 350:
+                sense.show_letter('N')
+            elif north < 280 and north > 260:
+                sense.show_letter('E')
+            elif north < 190 and north > 170:
+                sense.show_letter('S')
+    
+    exit_game = True
+    in_game=False
+    in_menu=True
+    update_menu()
 
 sense.stick.direction_middle = select_clicked
 sense.stick.direction_right = move_up_the_menu
