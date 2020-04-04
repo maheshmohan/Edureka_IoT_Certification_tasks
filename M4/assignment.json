@@ -1,0 +1,130 @@
+[
+    {
+        "id": "a0cb56d5.417c88",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "51dd39fc.2f6788",
+        "type": "mqtt out",
+        "z": "a0cb56d5.417c88",
+        "name": "testdata",
+        "topic": "/edu/test",
+        "qos": "",
+        "retain": "",
+        "broker": "dce4ecfe.cf5b3",
+        "x": 360,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "cb8b4809.e33ee8",
+        "type": "file in",
+        "z": "a0cb56d5.417c88",
+        "name": "",
+        "filename": "/home/pi/edureka_iot_works/M4/test.txt",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 340,
+        "y": 80,
+        "wires": [
+            [
+                "51dd39fc.2f6788"
+            ]
+        ]
+    },
+    {
+        "id": "54567d54.fe0f14",
+        "type": "mqtt in",
+        "z": "a0cb56d5.417c88",
+        "name": "",
+        "topic": "/edu/test",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "dce4ecfe.cf5b3",
+        "x": 160,
+        "y": 380,
+        "wires": [
+            [
+                "e7be94e9.5861c8",
+                "c568dd16.c249c"
+            ]
+        ]
+    },
+    {
+        "id": "c568dd16.c249c",
+        "type": "file",
+        "z": "a0cb56d5.417c88",
+        "name": "",
+        "filename": "/home/pi/edureka_iot_works/M4/test_out.txt",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 470,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e7be94e9.5861c8",
+        "type": "debug",
+        "z": "a0cb56d5.417c88",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 360,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "31d6f269.b2adbe",
+        "type": "inject",
+        "z": "a0cb56d5.417c88",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 80,
+        "y": 260,
+        "wires": [
+            [
+                "cb8b4809.e33ee8"
+            ]
+        ]
+    },
+    {
+        "id": "dce4ecfe.cf5b3",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "edutest",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "/edu/test",
+        "birthQos": "0",
+        "birthPayload": "up",
+        "closeTopic": "/edu/test",
+        "closeQos": "0",
+        "closePayload": "down",
+        "willTopic": "/edu/test",
+        "willQos": "0",
+        "willPayload": "vanished"
+    }
+]
